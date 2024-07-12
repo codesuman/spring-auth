@@ -2,15 +2,20 @@ package com.org.spring_auth.controller;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import javax.security.sasl.AuthenticationException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
 
@@ -19,18 +24,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         try {
-            if(authRequest.getUsername() == null || authRequest.getPassword() == null)
-                throw new AuthenticationException("AuthRequest is empty");
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword());
-            Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-            // Assuming successful authentication, you would normally return a JWT token here
-            return "Login successful!";
-        } catch (AuthenticationException e) {
-            return "Login failed!";
+            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+        } catch (Exception e){
+            log.error("Exception occurred while createAuthenticationToken ", e);
+            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
     }
 }

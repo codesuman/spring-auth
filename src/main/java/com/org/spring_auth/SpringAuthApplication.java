@@ -16,6 +16,13 @@ import java.util.Collections;
 @SpringBootApplication
 public class SpringAuthApplication {
 
+	/**
+	 *
+	 * Good Reads :
+	 * https://backendstory.com/spring-security-authentication-architecture-explained-in-depth/
+	 * https://medium.com/@tericcabrel/implement-jwt-authentication-in-a-spring-boot-3-application-5839e4fd8fac
+	 * https://medium.com/javarevisited/spring-framework-filter-vs-dispatcher-servlet-vs-interceptor-vs-controller-745aa34b08d8
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SpringAuthApplication.class, args);
 	}
