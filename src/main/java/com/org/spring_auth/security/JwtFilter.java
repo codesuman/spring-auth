@@ -21,14 +21,14 @@ import java.util.ArrayList;
 class JwtFilter extends OncePerRequestFilter {
     // Simple JWT implementation
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtService;
 
     // Spring Security will call this method during filter chain execution
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // trying to find Authorization header
         final String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || authorizationHeader.isEmpty() || !authorizationHeader.startsWith("Bearer")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
             // if Authorization header does not exist,
             // then skip this filter
             // and continue to execute next filter class
@@ -37,7 +37,7 @@ class JwtFilter extends OncePerRequestFilter {
         }
 
         final String token = authorizationHeader.split(" ")[1].trim();
-        if (!jwtUtil.validate(token)) {
+        if (!jwtService.isTokenValid(token)) {
             // if token is not valid, then skip this filter
             // and continue to execute next filter class.
             // This means authentication is not successful
@@ -48,7 +48,7 @@ class JwtFilter extends OncePerRequestFilter {
 
         // Authorization header exists, token is valid.
         // So, we can authenticate.
-        String username = jwtUtil.getUsername(token);
+        String username = jwtService.extractUsername(token);
         // initializing UsernamePasswordAuthenticationToken
         // with its 3 parameter constructor because
         // it sets super.setAuthenticated(true); in that constructor.
