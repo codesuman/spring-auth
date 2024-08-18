@@ -20,8 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Map<String, String> usersMap = new HashMap<>();
-        usersMap.put("ricky", passwordEncoder.encode("123"));
-        usersMap.put("martin", passwordEncoder.encode("456"));
+        usersMap.put("abc", passwordEncoder.encode("123"));
+        usersMap.put("xyz", passwordEncoder.encode("456"));
 
         if (usersMap.containsKey(username)) {
             return new User(username, usersMap.get(username), new ArrayList<>());

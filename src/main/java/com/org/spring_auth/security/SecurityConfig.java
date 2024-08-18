@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static String[] PUBLIC_PATHS = new String[]{"/health-check/**", "/auth/**", "/css/**.css", "/js/**"};
+    private static String[] PUBLIC_PATHS = new String[]{"/api/auth/public/**", "/css/**.css", "/js/**"};
 
     private final JwtFilter jwtFilter;
 

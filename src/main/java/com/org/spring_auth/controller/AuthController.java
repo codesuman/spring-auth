@@ -9,17 +9,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.org.spring_auth.security.JwtService;
 
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth/public")
 @Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -28,6 +25,11 @@ public class AuthController {
     public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+    }
+
+    @GetMapping("/health-check")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("UP");
     }
 
     @PostMapping("/login")
@@ -44,6 +46,11 @@ public class AuthController {
             log.error("Exception occurred while createAuthenticationToken ", e);
             return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register() {
+        return ResponseEntity.ok("API yet to be implemented.");
     }
 }
 
