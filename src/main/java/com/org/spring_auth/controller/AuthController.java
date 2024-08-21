@@ -1,5 +1,6 @@
 package com.org.spring_auth.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -41,10 +42,10 @@ public class AuthController {
             // if there is no exception thrown from authentication manager,
             // we can generate a JWT token and give it to user.
             String jwt = jwtService.generateToken(new User(authRequest.getUsername(), authRequest.getPassword(), new ArrayList<>()));
-            return ResponseEntity.ok(jwt);
+            return ResponseEntity.ok(new LoginResponse(authRequest.getUsername(), jwt, "Login Success"));
         } catch (Exception e){
             log.error("Exception occurred while createAuthenticationToken ", e);
-            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new LoginResponse("", "", "Incorrect username or password"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -59,4 +60,13 @@ public class AuthController {
 class AuthRequest {
     private String username;
     private String password;
+}
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+class LoginResponse {
+    private String username;
+    private String token;
+    private String msg;
 }
