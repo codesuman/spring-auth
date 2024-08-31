@@ -1,38 +1,43 @@
 # Spring Boot
 This is a basic Spring Boot application that includes a REST controller to handle HTTP GET requests.
 
-## Main Application Class
-The main application class, `SpringAuthApplication`, is annotated with `@SpringBootApplication`. This annotation combines three crucial annotations: `@Configuration`, `@EnableAutoConfiguration` and `@ComponentScan`. This setup enables Spring Boot`s auto-configuration feature and component scanning, allowing the application to automatically configure itself based on the dependencies present in the classpath.
+## Adding spring-boot-starter-security
 
-```java
-@SpringBootApplication
-public class SpringAuthApplication {
+Adding spring-boot-starter-security to your Spring Boot web project enforces security by default, requiring users to authenticate before accessing any endpoint. You get a basic authentication mechanism with a generated password and a default login page. If no security configurations are provided, everything is secured by default.
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringAuthApplication.class, args);
-	}
+### 1. Automatic Basic Authentication
+   Spring Security will automatically configure Basic Authentication.
+   Any request to your application's endpoints will require authentication.
+### 2. Default Login Page
+   If you run the application and try to access your simple controller (e.g., /hello), you will be redirected to a default login page provided by Spring Security.
+   You can log in using the default credentials:
+   Username: user
+   Password: A randomly generated password is printed in the console when the application starts. It looks something like this:
+   ```
+   Using generated security password: 1a2345b6-1a23-1a23-1a23-1a2345b6789d
+   ```
+### 3. Locked Down Endpoints
+   All endpoints in your application are secured by default.
+   If you try to access any endpoint without authentication, you’ll either be prompted with a login page (for web apps) or receive a 401 Unauthorized response (for API endpoints).
+### 4. Accessing Your Simple Controller
+   If you have a simple controller like this:
+   ```java
+   @RestController
+   public class HelloController {
+        @GetMapping("/hello")
+        public String hello() {
+            return "Hello, World!";
+        }
+   }
+   ```
+   After adding Spring Security, attempting to access /hello in a browser or via a tool like Postman will prompt for credentials.
+### 5. Authorization
+   By default, once authenticated, any user can access any endpoint. However, this behavior can be customized by configuring authorization rules.
 
-}
+
+## Overriding default username & password
+
 ```
-
-The main method is the entry point of the application. It uses SpringApplication.run to launch the application.
-
-## REST Controller
-The BasicController class is a simple REST controller that handles HTTP GET requests to the /hello endpoint.
-
-```java
-@RestController
-class BasicController {
-	@GetMapping("/hello")
-	public ResponseEntity<String> sayHello() {
-		return ResponseEntity.ok("Hello World");
-	}
-}
+spring.security.user.name=user
+spring.security.user.password=u@123
 ```
-
-- **`@RestController`**: This annotation indicates that the class is a controller where every method returns a domain object instead of a view. It is a convenience annotation that combines @Controller and @ResponseBody.
-- **`@GetMapping("/hello")`**: This annotation maps HTTP GET requests to the /hello endpoint to the sayHello method.
-- **`ResponseEntity.ok("Hello World")`**: This returns a response with the HTTP status 200 (OK) and the body containing the string "Hello World".
-When a GET request is made to the /hello endpoint, the server responds with "Hello World".
-
-This basic setup demonstrates the core structure of a Spring Boot application with a simple REST endpoint.
