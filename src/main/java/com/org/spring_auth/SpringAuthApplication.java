@@ -15,10 +15,3 @@ public class SpringAuthApplication {
 
 }
 
-@RestController
-class BasicController {
-	@GetMapping("/hello")
-	public ResponseEntity<String> sayHello() {
-		return ResponseEntity.ok("Hello World");
-	}
-}
