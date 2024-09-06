@@ -7,10 +7,12 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserPrincipal implements UserDetails {
-    private User user;
+    private String username;
+    private String password;
 
     public UserPrincipal(User user) {
-        this.user = user;
+        this.username = user.getUsername();
+        this.password = user.getPassword();
     }
 
     @Override
@@ -20,12 +22,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.user.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.user.getUsername();
+        return this.username;
     }
 
     @Override
