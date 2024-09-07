@@ -3,6 +3,8 @@ package com.org.spring_auth.controllers;
 import com.org.spring_auth.dto.UserDTO;
 import com.org.spring_auth.dto.UserLoginRequest;
 import com.org.spring_auth.dto.UserLoginResponse;
+
+import com.org.spring_auth.dto.UserValidateResponse;
 import com.org.spring_auth.model.User;
 import com.org.spring_auth.services.JwtService;
 import com.org.spring_auth.services.UserService;
@@ -14,13 +16,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/auth")
 @Slf4j
 public class UserController {
     @Autowired
@@ -32,12 +34,12 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/api/auth/public/register")
+    @PostMapping("/public/register")
     public User register(@RequestBody UserDTO userDTO) {
         return this.userService.register(User.builder().username(userDTO.getUsername()).password(userDTO.getPassword()).build());
     }
 
-    @PostMapping("/api/auth/public/login")
+    @PostMapping("/public/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         try{
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getUsername(), userLoginRequest.getPassword()));
@@ -53,5 +55,12 @@ public class UserController {
             log.error("Exception occurred while Login > createAuthenticationToken ", e);
             return new ResponseEntity<>(new UserLoginResponse("", "", "Incorrect username or password"), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<UserValidateResponse> validate() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return ResponseEntity.ok(new UserValidateResponse((String)authentication.getPrincipal()));
     }
 }
