@@ -82,3 +82,38 @@ The DaoAuthenticationProvider is configured to use this in-memory user store and
 This AuthenticationProvider is used by Spring Security to authenticate users based on the predefined usernames and passwords.
 
 This setup is ideal for quick testing or simple applications where you don't need persistent user data storage. However, for production systems, you would typically use a more secure password encoder and store user details in a database.
+
+
+# Docker Handy Commands
+
+#### Build image
+```
+docker build -t auth-api:1.0.0 .
+```
+
+#### Run MYSQL container
+```
+docker run -d -e MYSQL_ROOT_PASSWORD=rootroot -e MYSQL_DATABASE=authdb --name mysqldb -p 3307:3306 mysql:8.0
+```
+
+#### Run container
+```
+docker run -p 8000:8080 auth-api:1.0.0
+```
+
+Publish a container's port(s) to the host
+
+
+### Adding different profiles to Spring Boot app in Intellij
+
+#### Create profile-specific property files:
+In your project's "src/main/resources" folder, create files like "application-dev.properties" for development and "application-prod.properties" for production.
+
+#### Making this profile specific property files accessible to Intellij :
+* Go to "Run" > "Edit Configurations"
+* Select your Spring Boot application configuration.
+* In the "Modify options" > "Add VM options" field, add the following to specify the active profile:
+
+```
+-Dspring.profiles.active=dev
+```
